@@ -107,6 +107,15 @@ def add_contact(address_book):
         break
 
 
+def show_contacts(address_book, page_size):
+    address_book_iterator = objects.AddressBookIterator(address_book, page_size)
+    result = []
+    for page in address_book_iterator:
+        for record in page:
+            result.append(f'{record[0]}, {"; ".join(rec for rec in record[1])}')
+    print(', '.join(result))
+
+
 def change_contact(address_book):
     name = input("Enter the contact's name to change the number: ")
     new_number = input("Enter the new phone number: ")
@@ -116,15 +125,6 @@ def change_contact(address_book):
         print(f"Contact '{name}' phone number changed to '{new_number}'.")
     except ValueError as e:
         print(f"Error: {e}")
-
-
-def show_contacts(address_book, page_size):
-    address_book_iterator = objects.AddressBookIterator(address_book, page_size)
-    result = []
-    for page in address_book_iterator:
-        for record in page:
-            result.append(f'{record[0]}, {"; ".join(rec for rec in record[1])}')
-    print(', '.join(result))
 
 
 def edit_phone(address_book, contacts, name, old_phone, new_phone):
@@ -144,6 +144,7 @@ def search_contact(address_book):
     if found_contacts:
         print("Found contacts:")
         for contact in found_contacts:
+
             contact_info = f"Name: {contact.name.value}"
             if contact.emails and contact.emails is not None:
                 contact_info += f", Email: {', '.join(email.value for email in contact.emails)}"
@@ -260,7 +261,6 @@ def main():
         user_input = input("Enter a command: ")
         if user_input == 'hello':
             print('Welcome to assist bot')
-
         elif user_input == 'close':
             print("Good bye")
             break
