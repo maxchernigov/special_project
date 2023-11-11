@@ -175,10 +175,9 @@ class Record:
         self.phones.append(phone)
     
     def change_phone(self, new_phone):
-        if self.phones:
-            self.phones[0] = new_phone
-        else:
-            self.phones.append(new_phone)
+        if not self.phones:
+            raise ValueError("Нет номера телефона для изменения.")
+        self.phones[0].value = new_phone
 
     def remove_phone(self, phone):
         self.phones = [p for p in self.phones if p.value != phone]
@@ -212,10 +211,11 @@ class Record:
 
 class AddressBook(UserDict):
     def add_record(self, record):
-        if record.name in self.data:
-            self.data[record.name].append(record)
+        name_value = record.name.value
+        if name_value not in self.data:
+            self.data[name_value] = [record]
         else:
-            self.data[record.name] = [record]
+            self.data[name_value].append(record)
 
     def find(self, name):
         records = self.data.get(name)
@@ -223,18 +223,12 @@ class AddressBook(UserDict):
             return records[0]
         else:
             return None
-    
-
+        
     def change_phone(self, name, new_number):
         if name in self.data:
             self.data[name][0].change_phone(new_number)
         else:
             raise ValueError("Контакт не найден")
-    # def change_сontact(self, name, new_number):
-    #     if name in self.data:
-    #         self.data[name].change_phone(new_number)
-    #     else:
-    #         raise ValueError("Контакт не найден")
 
     def delete(self, name):
         if name in self.data:
